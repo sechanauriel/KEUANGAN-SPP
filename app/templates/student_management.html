@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPP Management - Student Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        input,
+        select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table thead {
+            background: #f8f9fa;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-graduated {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state p {
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👥 Manajemen Data Mahasiswa</h1>
+            <p>Kelola data mahasiswa, tambahkan, edit, dan hapus dengan mudah</p>
+        </header>
+
+        <div class="main-section">
+            <!-- Alert Messages -->
+            <div id="alertContainer"></div>
+
+            <!-- Statistics -->
+            <div class="stats" id="statsContainer"></div>
+
+            <!-- Form Section -->
+            <div class="form-container">
+                <h3 style="color: #333; margin-bottom: 15px;">➕ Tambah Mahasiswa Baru</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>NIM (Nomor Induk Mahasiswa) *</label>
+                        <input type="text" id="nim" placeholder="Contoh: 20241234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Lengkap *</label>
+                        <input type="text" id="name" placeholder="Contoh: Adi Pratama" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" placeholder="Contoh: adi@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Telepon</label>\n                        <input type="tel" id="phone" placeholder="Contoh: 081234567890">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Program Studi *</label>
+                        <select id="program_studi_id" required>
+                            <option value="">-- Pilih Program Studi --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="status">
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Tidak Aktif</option>
+                            <option value="graduated">Lulus</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="addStudent()">✅ Tambah Mahasiswa</button>
+                    <button class="btn-secondary" onclick="resetForm()">🔄 Reset Form</button>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Cari mahasiswa (NIM atau Nama)...">
+            </div>
+
+            <!-- Students List -->
+            <h3 class="section-title">📋 Daftar Mahasiswa Terdaftar</h3>
+            <div class="table-container" id="studentListContainer">
+                <div class="loading">Memuat data mahasiswa...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // LOAD PROGRAM STUDI
+        // ============================================================
+        function loadProgramStudi() {
+            fetch('/api/billing/program-studi')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('program_studi_id');
+                    
+                    if (data.programs) {
+                        data.programs.forEach(prog => {
+                            const option = document.createElement('option');
+                            option.value = prog.id;
+                            option.textContent = `${prog.name} (SPP: Rp ${prog.spp_amount.toLocaleString('id-ID')})`;\n                            select.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading program studi:', error));
+        }
+
+        // ============================================================
+        // LOAD ALL STUDENTS
+        // ============================================================
+        function loadStudents(searchQuery = '') {
+            const container = document.getElementById('studentListContainer');
+            container.innerHTML = '<div class="loading">Memuat data mahasiswa...</div>';
+
+            const url = searchQuery ? `/api/billing/student/search?q=${searchQuery}` : '/api/billing/student';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    updateStats(data);
+                    
+                    const students = data.students || [];
+                    
+                    if (students.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <p>📭 Tidak ada data mahasiswa</p>
+                                <p>Silakan tambahkan mahasiswa baru menggunakan form di atas</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let html = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Telepon</th>
+                                    <th>Program Studi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    students.forEach((student, index) => {
+                        const statusClass = `status-${student.status}`;
+                        const statusText = student.status === 'active' ? '✅ Aktif' :
+                                          student.status === 'graduated' ? '🎓 Lulus' : '❌ Tidak Aktif';
+                        
+                        html += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td><strong>${student.nim}</strong></td>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>${student.phone || '-'}</td>
+                                <td>${student.program_studi}</td>
+                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="btn-danger" onclick="deleteStudent(${student.id}, '${student.name}')\">\n                                            🗑️ Hapus\n                                        </button>\n                                    </div>\n                                </td>\n                            </tr>\n                        `;\n                    });\n\n                    html += `\n                            </tbody>\n                        </table>\n                    `;\n                    \n                    container.innerHTML = html;\n                })\n                .catch(error => {\n                    console.error('Error loading students:', error);\n                    container.innerHTML = '<div class=\"empty-state\"><p>❌ Error memuat data</p></div>';\n                });\n        }\n\n        // ============================================================\n        // UPDATE STATISTICS\n        // ============================================================\n        function updateStats(data) {\n            const total = data.total || 0;\n            const active = (data.students || []).filter(s => s.status === 'active').length;\n            const graduated = (data.students || []).filter(s => s.status === 'graduated').length;\n            const inactive = total - active - graduated;\n\n            document.getElementById('statsContainer').innerHTML = `\n                <div class=\"stat-card\">\n                    <div class=\"label\">Total Mahasiswa</div>\n                    <div class=\"value\">${total}</div>\n                </div>\n                <div class=\"stat-card\">\n                    <div class=\"label\">Status Aktif</div>\n                    <div class=\"value\">${active}</div>\n                </div>\n                <div class=\"stat-card\">\n                    <div class=\"label\">Lulus</div>\n                    <div class=\"value\">${graduated}</div>\n                </div>\n                <div class=\"stat-card\">\n                    <div class=\"label\">Tidak Aktif</div>\n                    <div class=\"value\">${inactive}</div>\n                </div>\n            `;\n        }\n\n        // ============================================================\n        // ADD STUDENT\n        // ============================================================\n        function addStudent() {\n            const nim = document.getElementById('nim').value.trim();\n            const name = document.getElementById('name').value.trim();\n            const email = document.getElementById('email').value.trim();\n            const phone = document.getElementById('phone').value.trim();\n            const program_studi_id = document.getElementById('program_studi_id').value;\n            const status = document.getElementById('status').value;\n\n            // Validation\n            if (!nim || !name || !email || !program_studi_id) {\n                showAlert('error', '⚠️ Semua field yang bertanda * harus diisi!');\n                return;\n            }\n\n            if (!email.includes('@')) {\n                showAlert('error', '⚠️ Email tidak valid!');\n                return;\n            }\n\n            const payload = {\n                nim: nim,\n                name: name,\n                email: email,\n                phone: phone,\n                program_studi_id: parseInt(program_studi_id),\n                status: status\n            };\n\n            fetch('/api/student/', {\n                method: 'POST',\n                headers: {\n                    'Content-Type': 'application/json',\n                },\n                body: JSON.stringify(payload)\n            })\n            .then(response => response.json())\n            .then(result => {\n                if (result.message) {\n                    showAlert('success', `✅ ${result.message}`);\n                    resetForm();\n                    loadStudents();\n                } else {\n                    showAlert('error', `❌ Error: ${result.error}`);\n                }\n            })\n            .catch(error => {\n                console.error('Error:', error);\n                showAlert('error', '❌ Error menambahkan mahasiswa');\n            });\n        }\n\n        // ============================================================\n        // DELETE STUDENT\n        // ============================================================\n        function deleteStudent(id, name) {\n            if (!confirm(`⚠️ Apakah Anda yakin ingin menghapus mahasiswa: ${name}?\\n\\nTindakan ini tidak dapat dibatalkan!`)) {\n                return;\n            }\n\n            fetch(`/api/student/${id}`, {\n                method: 'DELETE',\n                headers: {\n                    'Content-Type': 'application/json',\n                }\n            })\n            .then(response => response.json())\n            .then(result => {\n                if (result.message) {\n                    showAlert('success', `✅ ${result.message}`);\n                    loadStudents();\n                } else {\n                    showAlert('error', `❌ Error: ${result.error}`);\n                }\n            })\n            .catch(error => {\n                console.error('Error:', error);\n                showAlert('error', '❌ Error menghapus mahasiswa');\n            });\n        }\n\n        // ============================================================\n        // SHOW ALERT\n        // ============================================================\n        function showAlert(type, message) {\n            const container = document.getElementById('alertContainer');\n            const alert = document.createElement('div');\n            alert.className = `alert alert-${type} show`;\n            alert.textContent = message;\n            \n            container.innerHTML = '';\n            container.appendChild(alert);\n            \n            // Auto hide after 5 seconds\n            setTimeout(() => {\n                alert.classList.remove('show');\n            }, 5000);\n        }\n\n        // ============================================================\n        // RESET FORM\n        // ============================================================\n        function resetForm() {\n            document.getElementById('nim').value = '';\n            document.getElementById('name').value = '';\n            document.getElementById('email').value = '';\n            document.getElementById('phone').value = '';\n            document.getElementById('program_studi_id').value = '';\n            document.getElementById('status').value = 'active';\n            document.getElementById('searchInput').value = '';\n        }\n\n        // ============================================================\n        // SEARCH FUNCTIONALITY\n        // ============================================================\n        document.addEventListener('DOMContentLoaded', () => {\n            loadProgramStudi();\n            loadStudents();\n\n            // Search on input\n            document.getElementById('searchInput').addEventListener('input', (e) => {\n                const query = e.target.value.trim();\n                if (query.length >= 2) {\n                    loadStudents(query);\n                } else if (query.length === 0) {\n                    loadStudents();\n                }\n            });\n        });\n    </script>\n</body>\n</html>\n"}}]
